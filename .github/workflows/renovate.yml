@@ -1,6 +1,24 @@
 name: Renovate Bot
 
 on:
+  # Run on push to master (after PR merge or direct push)
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'renovate-config.js'
+      - '.github/workflows/renovate.yml'
+  
+  # Run on pull requests to master/main
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - 'renovate-config.js'
+      - '.github/workflows/renovate.yml'
+  
   # Run every 6 hours
   schedule:
     - cron: '0 */6 * * *'
@@ -48,7 +66,7 @@ jobs:
           #   another-repo
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@v43
+        uses: renovatebot/github-action@v44.0.4
         with:
           configurationFile: renovate-config.js
           token: '${{ steps.get_token.outputs.token }}'

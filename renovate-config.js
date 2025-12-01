@@ -6,6 +6,9 @@
  */
 
 module.exports = {
+  // Extend Renovate's recommended base configuration
+  extends: ['config:base'],
+  
   // Branch prefix for Renovate PRs
   branchPrefix: 'renovate/',
   
@@ -14,7 +17,7 @@ module.exports = {
   gitAuthor: 'Renovate Bot <bot@renovateapp.com>',
   
   // Skip onboarding PR (set to true if you want an initial onboarding PR)
-  onboarding: false,
+  onboarding: true,
   
   // Platform configuration
   platform: 'github',
@@ -22,6 +25,11 @@ module.exports = {
   // Repositories to manage (add all repos you want Renovate to monitor)
   repositories: [
     'UYR-DOCTORS/UYR-WEB-INFRA',
+    'UYR-DOCTORS/TERRAFORM-MODULES',
+    'UYR-DOCTORS/UYR-WEB',
+    'UYR-DOCTORS/UYR-AMI-BUILD',
+    'UYR-DOCTORS/UYR-APP',
+    'UYR-DOCTORS/UYR-ORGANISATION'
     // Add more repositories here:
     // 'UYR-DOCTORS/another-repo',
   ],
@@ -34,26 +42,32 @@ module.exports = {
   ],
   
   // Limit concurrent PRs to avoid overwhelming reviewers
-  prConcurrentLimit: 5,
+  prConcurrentLimit: 10,
   
-  // Group updates by type for easier review
+  // Group updates by repository and type for easier review
   packageRules: [
     {
-      // Group all Terraform provider updates
+      // Group all Terraform provider updates per repository
       matchDatasources: ['terraform-provider'],
-      groupName: 'Terraform providers',
+      groupName: 'Terraform providers ({{parentDir}})',
       automerge: false,
     },
     {
-      // Group all Terraform module updates
+      // Group all Terraform module updates per repository
       matchDatasources: ['terraform-module'],
-      groupName: 'Terraform modules',
+      groupName: 'Terraform modules ({{parentDir}})',
       automerge: false,
     },
     {
-      // Group GitHub Actions updates
+      // Group GitHub Actions updates per repository
       matchManagers: ['github-actions'],
-      groupName: 'GitHub Actions',
+      groupName: 'GitHub Actions ({{parentDir}})',
+      automerge: false,
+    },
+    {
+      // Group npm dependencies per repository
+      matchManagers: ['npm'],
+      groupName: 'npm dependencies ({{parentDir}})',
       automerge: false,
     },
     {
